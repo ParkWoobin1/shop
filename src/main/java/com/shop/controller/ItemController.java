@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,13 @@ public class ItemController {
     }
 
     @PostMapping(value = "/admin/item/new")
-    public String itemNew(@Valid ItemFormDto itemFormDto, BindingResult bindingResult, Model model, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList){
+    public String itemNew(@Valid ItemFormDto itemFormDto,
+                          BindingResult bindingResult,
+                          Model model,
+                          @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList,
+                          Principal principal){
 
+        String email = principal.getName();
         if(bindingResult.hasErrors()){
             return "item/itemForm";
         }
@@ -49,7 +55,7 @@ public class ItemController {
         }
 
         try {
-            itemService.saveItem(itemFormDto, itemImgFileList);
+            itemService.saveItem(email, itemFormDto, itemImgFileList);
         } catch (Exception e){
             model.addAttribute("errorMessage", "상품 등록 중 에러가 발생하였습니다.");
             return "item/itemForm";

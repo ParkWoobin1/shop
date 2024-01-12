@@ -1,14 +1,13 @@
 package com.shop.service;
 
 
-import com.shop.dto.ItemFormDto;
-import com.shop.dto.ItemImgDto;
-import com.shop.dto.ItemSearchDto;
-import com.shop.dto.MainItemDto;
+import com.shop.dto.*;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
+import com.shop.entity.Member;
 import com.shop.repository.ItemImgRepository;
 import com.shop.repository.ItemRepository;
+import com.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +28,16 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
+    private final MemberRepository memberRepository;
 
-    public Long saveItem(ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
+    public Long saveItem(String email, ItemFormDto itemFormDto, List<MultipartFile> itemImgFileList) throws Exception{
 
         //상품 등록
         Item item = itemFormDto.createItem();
+        //23-12-06추가
+        Member member = memberRepository.findByEmail(email);
+        item.setMember1(member);
+        //23-12-06추가
         itemRepository.save(item);
 
         //이미지 등록
@@ -93,8 +98,34 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
+
         return itemRepository.getMainItemPage(itemSearchDto, pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Page<MainItemDto> getMainAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal){
+        //추가한 부분
+        Member member = memberRepository.findByEmail(principal.getName());
+        itemSearchDto.setMemberId(member.getId());
+        //추가할부분 24-01-05
+
+        return  itemRepository.getMainItemPage(itemSearchDto, pageable);
+
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<MainItemDto2> getMainAdminItemPage2(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal){
+        //추가한 부분
+        Member member = memberRepository.findByEmail(principal.getName());
+        itemSearchDto.setMemberId(member.getId());
+        //추가할부분 24-01-05
+
+        //24-01-05 임시주석처리return itemRepository.getMainItemPage(itemSearchDto, pageable);
+        return itemRepository.getMainUserItemPage(itemSearchDto, pageable,principal);
+    }
+
+
 
 
 

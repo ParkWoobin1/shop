@@ -4,8 +4,10 @@ import com.shop.constant.ItemSellStatus;
 import com.shop.dto.ItemFormDto;
 import com.shop.entity.Item;
 import com.shop.entity.ItemImg;
+import com.shop.entity.Member;
 import com.shop.repository.ItemImgRepository;
 import com.shop.repository.ItemRepository;
+import com.shop.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,9 @@ class ItemServiceTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired
     ItemImgRepository itemImgRepository;
@@ -63,7 +69,9 @@ class ItemServiceTest {
         itemFormDto.setStockNumber(100);
 
         List<MultipartFile> multipartFileList = createMultipartFiles();
-        Long itemId = itemService.saveItem(itemFormDto, multipartFileList);
+
+        String email2 = "alstn@naver.com";
+        Long itemId = itemService.saveItem(email2, itemFormDto, multipartFileList);
 
         List<ItemImg> itemImgList = itemImgRepository.findByItemIdOrderByIdAsc(itemId);
         Item item = itemRepository.findById(itemId)
@@ -76,5 +84,7 @@ class ItemServiceTest {
         assertEquals(itemFormDto.getStockNumber(), item.getStockNumber());
         assertEquals(multipartFileList.get(0).getOriginalFilename(), itemImgList.get(0).getOriImgName());
     }
+
+
 
 }

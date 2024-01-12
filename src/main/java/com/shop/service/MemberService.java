@@ -23,6 +23,13 @@ public class MemberService implements UserDetailsService{
         return memberRepository.save(member);
     }
 
+    //추가한부분 24-01-10
+    public Member findMember(String email){
+        Member findMember = memberRepository.findByEmail(email);
+        return findMember;
+    }
+    //추가한부분 24-01-10
+
     private void validateDuplicateMember(Member member){
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if(findMember != null){

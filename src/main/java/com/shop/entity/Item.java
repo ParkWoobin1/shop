@@ -44,6 +44,13 @@ public class Item extends BaseEntity{
     private LocalDateTime updateTime;
 
 
+
+    //추가한부분23-12-06
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member1;
+    //추가한부분23-12-06
+
     @ManyToMany
     @JoinTable(
             name = "member_item",

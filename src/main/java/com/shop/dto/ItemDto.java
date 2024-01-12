@@ -17,4 +17,7 @@ public class ItemDto {
     private String sellStatCd;
     private LocalDateTime regTime;
     private LocalDateTime updateTime;
+    //추가한부분24-01-08
+    private Long memberId;
+    //추가한부분24-01-08
 }

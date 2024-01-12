@@ -21,3 +21,51 @@ body {
     margin-left: 200px;
     margin-right: 200px;
 }
+
+.sidebar {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 20;
+    left: 0;
+    background-color: #111;
+    padding-top: 20px;
+}
+
+.sidebar h2 {
+    color: white;
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 8px;
+    text-align: center;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 16px;
+}
+.sidebar-text {
+    color: white;
+}
+.sidebar-text a {
+    color: white;
+}

@@ -1,7 +1,9 @@
 package com.shop.entity;
 
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter@Setter
+//@Builder
+@NoArgsConstructor
 public class OrderItem extends BaseEntity{
     @Id
     @GeneratedValue
@@ -24,6 +28,7 @@ public class OrderItem extends BaseEntity{
     private Order order;
 
     private int orderPrice;
+    //Bigdicimall 자료형 변경으로 예정
 
     private int count;
 
@@ -35,6 +40,11 @@ public class OrderItem extends BaseEntity{
 
         item.removeStock(count);
         return orderItem;
+       /* return OrderItem.builder()
+                .item(item)
+                .count(count)
+                .orderPrice(item.getPrice())
+                .build();*/
     }
 
     public int getTotalPrice(){
