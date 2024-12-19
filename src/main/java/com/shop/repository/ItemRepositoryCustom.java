@@ -22,4 +22,10 @@ public interface ItemRepositoryCustom {
     Page<MainItemDto2> getMainUserItemPage(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal);
     //24-01-05 추가
 
+    //24-01-05 추가
+    Page<MainItemDto2> getMainUserItemRealPage(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal);
+    //24-01-05 추가
+    //24-11-11추가
+    List<MainItemDto2> getItemRealPicture(ItemSearchDto itemSearchDto);
+
 }

@@ -2,8 +2,12 @@ package com.shop.controller;
 
 import com.shop.dto.ItemFormDto;
 import com.shop.dto.ItemSearchDto;
+import com.shop.dto.MainItemDto2;
 import com.shop.entity.Item;
+import com.shop.entity.Member;
 import com.shop.service.ItemService;
+import com.shop.service.MemberService;
+import com.shop.service.NaverSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +32,8 @@ import java.util.Optional;
 public class ItemController {
 
     private final ItemService itemService;
+    private final MemberService memberService;
+    private final NaverSearchService naverSearchService;
 
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model)
@@ -103,7 +109,7 @@ public class ItemController {
 
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 5);
         Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
         model.addAttribute("items", items);
         model.addAttribute("itemSearchDto", itemSearchDto);
@@ -117,4 +123,29 @@ public class ItemController {
         model.addAttribute("item", itemFormDto);
         return "item/itemDtl";
     }
-}
+
+    @GetMapping(value = "/admin/items/realPicture")
+    public String realPicture(ItemSearchDto itemSearchDto, Model model, Principal principal){
+        String email = principal.getName();
+        Member member = memberService.findMember(email);
+
+
+        List<MainItemDto2> realItem = itemService.getMainUserItemRealPage(itemSearchDto, principal);
+
+        model.addAttribute("realItem",realItem);
+
+        return "item/itemReal";
+    }
+
+    @GetMapping("/admin/news")
+    public String getGolfzonNews(Model model) {
+       // var news = naverSearchService.searchGolfzonArticles();
+
+        //model.addAttribute("news");
+        return "news"; // news.html을 렌더링합니다.
+    }
+
+
+
+
+  }

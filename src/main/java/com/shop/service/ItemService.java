@@ -125,6 +125,27 @@ public class ItemService {
         return itemRepository.getMainUserItemPage(itemSearchDto, pageable,principal);
     }
 
+    //등록시간 추가를 위한 메서드 추가 24-01-22
+    @Transactional(readOnly = true)
+    public Page<MainItemDto2> getMainUserItemRealPage(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal){
+        //추가한 부분
+        Member member = memberRepository.findByEmail(principal.getName());
+        itemSearchDto.setMemberId(member.getId());
+        //추가할부분 24-01-05
+
+        //24-01-05 임시주석처리return itemRepository.getMainItemPage(itemSearchDto, pageable);
+        return itemRepository.getMainUserItemRealPage(itemSearchDto, pageable,principal);
+    }
+    //등록시간 추가를 위한 메서드 추가 24-01-22
+
+    @Transactional(readOnly = true)
+    public List<MainItemDto2> getMainUserItemRealPage(ItemSearchDto itemSearchDto, Principal principal){
+        Member member = memberRepository.findByEmail(principal.getName());
+        itemSearchDto.setMemberId(member.getId());
+
+        return itemRepository.getItemRealPicture(itemSearchDto);
+    }
+
 
 
 

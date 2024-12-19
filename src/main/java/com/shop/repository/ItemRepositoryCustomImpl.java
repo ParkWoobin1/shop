@@ -6,7 +6,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.shop.constant.ItemSellStatus;
 import com.shop.dto.*;
 import com.shop.entity.Item;
-import com.shop.entity.Member;
 import com.shop.entity.QItem;
 import com.shop.entity.QItemImg;
 import org.springframework.data.domain.Page;
@@ -129,7 +128,45 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
                                 item.itemDetail,
                                 itemImg.imgUrl,
                                 item.price,
-                                item.member1.id
+                                item.member1.id,
+
+                                item.regTime)
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repimgYn.eq("Y"))
+                .where(item.itemSellStatus.eq(ItemSellStatus.SELL))
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                //추가한부분 24-01-05
+                .where(item.member1.id.eq(itemSearchDto.getMemberId()))
+                //추가한부분 24-01-05
+                .orderBy(item.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        List<MainItemDto2> content = results.getResults();
+        long total = results.getTotal();
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Page<MainItemDto2> getMainUserItemRealPage(ItemSearchDto itemSearchDto, Pageable pageable, Principal principal) {
+        QItem item = QItem.item;
+
+        QItemImg itemImg = QItemImg.itemImg;
+
+        QueryResults<MainItemDto2> results;
+        results = queryFactory
+                .select(
+                        new QMainItemDto2(
+                                item.id,
+                                item.itemNm,
+                                item.itemDetail,
+                                itemImg.imgUrl,
+                                item.price,
+                                item.member1.id,
+                                item.regTime
 
                         )
                 )
@@ -149,5 +186,42 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom{
         List<MainItemDto2> content = results.getResults();
         long total = results.getTotal();
         return new PageImpl<>(content, pageable, total);
+    }
+
+
+    @Override
+    public List<MainItemDto2> getItemRealPicture(ItemSearchDto itemSearchDto) {
+        QItem item = QItem.item;
+
+        QItemImg itemImg = QItemImg.itemImg;
+
+        QueryResults<MainItemDto2> results;
+        results = queryFactory
+                .select(
+                        new QMainItemDto2(
+                                item.id,
+                                item.itemNm,
+                                item.itemDetail,
+                                itemImg.imgUrl,
+                                item.price,
+                                item.member1.id,
+                                item.regTime
+
+                        )
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.repimgYn.eq("Y"))
+                .where(item.itemSellStatus.eq(ItemSellStatus.SELL))
+                .where(itemNmLike(itemSearchDto.getSearchQuery()))
+                //추가한부분 24-01-05
+                .where(item.member1.id.eq(itemSearchDto.getMemberId()))
+                //추가한부분 24-01-05
+                .orderBy(item.id.desc())
+                .fetchResults();
+
+        List<MainItemDto2> content = results.getResults();
+        long total = results.getTotal();
+        return  content;
     }
 }

@@ -27,6 +27,15 @@
         }
 
     </script>
+
+    <script>
+      function openNewWindow() {
+      
+        window.open('/admin/items/realPicture', "_blank", "width=600,height=800");
+    }
+      </script>
+
+  
 </th:block>
 
 <!-- 사용자 CSS 추가 -->
@@ -39,7 +48,10 @@
 </th:block>
 
 <div layout:fragment="content">
-
+  <div>
+    <button onclick="openNewWindow()">자산실사 시행</button>
+    
+  </div>
   <form th:action="@{'/admin/items/' + ${items.number}}" role="form" method="get" th:object="${items}">
     <table class="table">
       <thead>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Real Picture</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Item List</h2>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- realItem 리스트를 순회하여 각 아이템을 행으로 출력 -->
+                <tr th:each="item : ${realItem}">
+                    <td><input type="checkbox" class="item-checkbox" th:value="${item.id}"></td>
+                    <td th:text="${item.itemNm}">ID</td>
+                    <td th:text="${item.itemDetail}">Name</td>
+                    <td th:text="${item.price}">Price</td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="getSelectedItems()">Get Selected Items</button>
+    </div>
+
+    <script>
+        function getSelectedItems() {
+            // 체크된 항목의 값을 배열로 수집
+            const selectedItems = Array.from(document.querySelectorAll('.item-checkbox:checked'))
+                .map(checkbox => checkbox.value);
+
+            // 결과 출력 (콘솔 또는 원하는 방법으로 사용 가능)
+            console.log('Selected item IDs:', selectedItems);
+            alert('Selected item IDs: ' + selectedItems.join(', '));
+        }
+    </script>
+</body>
+</html>

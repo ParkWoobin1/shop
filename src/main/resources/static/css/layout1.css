@@ -2,6 +2,7 @@ html {
     position: relative;
     min-height: 100%;
     margin: 0;
+    padding: 0;
 }
 body {
     min-height: 100%;
@@ -22,50 +23,62 @@ body {
     margin-right: 200px;
 }
 
-.sidebar {
+.side-bar {
     height: 100%;
-    width: 200px;
+    width: 230px;
     position: fixed;
     top: 20;
     left: 0;
-    background-color: #111;
+    background-color: #ffffff;
     padding-top: 20px;
 }
-
-.sidebar h2 {
-    color: white;
-    text-align: center;
+.side-bar > ul ul {
+  display: none;
+}
+body, ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;   	    /* 해당 태그의 list-style을 none으로 하는 것으로 ●을 제거한다 */
 }
 
-.sidebar ul {
-    list-style-type: none;
-    padding: 0;
+a {
+  color: inherit;   	    /* 부모 엘리먼트의 값을 물려받는다 */
+  text-decoration: none;    /* 해당 태그의 text-decoration 속성을 none 값으로 하는 것으로 밑줄을 제거한다 */
 }
 
-.sidebar li {
-    padding: 8px;
-    text-align: center;
+/* 자식의 position이 absolute일 때 자식을 영역 안에 가두어 준다 */
+.side-bar > ul ul {
+  display: none;
 }
+/* 자식의 position이 absolute일 때 자식을 영역 안에 가두어 준다 */
 
-.sidebar a {
-    text-decoration: none;
-    color: white;
-    display: block;
-    transition: 0.3s;
+/* 모든 메뉴가 마우스 인식 시 반응 */
+.side-bar ul > li:hover > a {
+  background-color: #555;
+  border-bottom: 1px solid #999;
 }
+/* 모든 메뉴가 마우스 인식 시 반응 */
 
-.sidebar a:hover {
-    background-color: #ddd;
-    color: black;
-}
 
 .content {
     margin-left: 250px;
     padding: 16px;
 }
-.sidebar-text {
+.sidebar-nav {
     color: white;
 }
 .sidebar-text a {
     color: white;
+}
+.top-right-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: flex;
+}
+.top-right-text {
+    padding: 10px;
+    margin: 5px;
+    background-color: #f0f0f0;
+    /* You can customize the background color, text color, font size, etc. */
 }

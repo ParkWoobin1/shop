@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<th:block layout:fragment="script">
+    <script th:inline="javascript"></script>
+
+    </script>
+</th:block>
+    
+<body>
+
+<h2 class="mb-4">
+    자산목록
+</h2>
+<th:block layout:fragment="css">
+    <style>
+        .content-mg{
+            margin-left:25%;
+            margin-right:25%;
+            margin-top:2%;
+            margin-bottom:100px;
+        }
+        .repImgDiv{
+            margin-right:15px;
+            margin-left:15px;
+            height:auto;
+        }
+        .repImg{
+            height:100px;
+            width:100px;
+        }
+        .fs18{
+            font-size:18px
+        }
+        .fs24{
+            font-size:24px
+        }
+    </style>
+</th:block>
+<div layout:fragment="content" class="content-mg">
+
+    <table class="table">
+        <colgroup>
+            <col width="15%"/>
+            <col width="70%"/>
+            <col width="15%"/>
+        </colgroup>
+        <thead>
+        <tr class="text-center">
+            <td>
+                <input type="checkbox" id="checkall" onclick="checkAll()"> 전체선택
+            </td>
+            <td>상품정보</td>
+            <td>상품금액</td>
+            <td>구매날짜</td>
+            <td>가격</td>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cartItem : ${cartItems}">
+            <td class="text-center align-middle">
+                <input type="checkbox" name="cartChkBox" th:value="${cartItem.id}">
+            </td>
+            <td class="d-flex">
+                <div class="align-self-center">
+                    <span th:text="${cartItem.itemNm}" class="fs24 font-weight-bold"></span>
+                    <div class="fs18 font-weight-light">
+                            <span class="input-group mt-2">
+                            </span>
+                    </div>
+                </div>
+            </td>
+            <td th:text="${cartItem.price}">원</td>
+            <td th:text="${cartItem.regTime}">원</td>
+
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
