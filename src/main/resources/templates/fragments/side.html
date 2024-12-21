@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Custom fonts for this template-->
+
+
+<!-- Sidebar - Brand -->
+<div class="side-bar" th:fragment="side" >
+
+    <li class="top-left-text" sec:authorize="hasAnyAuthority('ROLE_ADMIN')" style="display: flex; align-items: center;">
+        <i class="fa-brands fa-apple" style="margin-left: 10px; margin-right: 5px;"></i>
+        <a class="nav-link" href="/admin/item/new">자산 등록</a>
+    </li>
+    <li class="top-left-text" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+        <a class="nav-link" href="/admin/items">자산 관리</a>
+    </li>
+    <li class="top-left-text"  sec:authorize="hasAnyAuthority('ROLE_USER')">
+        <a class="nav-link" href="/shop/items">자산 실사</a>
+    </li>
+    <li class="top-left-text" sec:authorize="isAuthenticated()">
+        <a class="nav-link" href="/orders">구매이력</a>
+    </li>
+    
+</div>
+
+</html>
