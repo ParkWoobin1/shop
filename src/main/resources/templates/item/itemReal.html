@@ -41,6 +41,17 @@
             // 결과 출력 (콘솔 또는 원하는 방법으로 사용 가능)
             console.log('Selected item IDs:', selectedItems);
             alert('Selected item IDs: ' + selectedItems.join(', '));
+
+            var param = JSON.stringify(selectedItems);
+
+            var url = "/item/item"
+            $.ajax({
+                url : url,
+                type : "POST",
+                contentType : "application/json",
+                data     : param,
+            })
+            
         }
     </script>
 </body>

@@ -6,115 +6,167 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script src="https://pay.nicepay.co.kr/v1/js/"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <!-- 사용자 스크립트 추가 -->
 <th:block layout:fragment="script">
 
     <script th:inline="javascript">
-        $(document).ready(function(){
+        document.addEventListener('DOMContentLoaded', function () {
+            function calculateTotalPrice() {
+                var count = $("#count").val();
+                var price = $("#price").val();
+                var totalPrice = price * count;
+                $("#totalPrice").html(totalPrice + '원');
+            }
 
-            calculateToalPrice();
+            function order() {
+                if (typeof AUTHNICE === 'undefined') {
+                alert("나이스페이 결제 스크립트가 로드되지 않았습니다.");
+                console.error;
+                return;
+            }
 
-            $("#count").change( function(){
-                calculateToalPrice();
+            // 필수 데이터 가져오기
+            const token = $("meta[name='_csrf']").attr("content");
+            const header = $("meta[name='_csrf_header']").attr("content");
+            const itemId = $("#itemId").val();
+            const count = $("#count").val();
+            const price = $("#price").val();
+            const totalPrice = price * count;
+
+            console.log("CSRF Token:", token);
+            console.log("CSRF Header:", header);
+            console.log("Item ID:", itemId);
+            console.log("Total Price:", totalPrice);
+
+            // 결제 요청과 주문 처리를 비동기로 수행
+            processPaymentAndOrder(token, header, itemId, count, totalPrice);
+        }
+
+        async function processPaymentAndOrder(token, header, itemId, count, totalPrice) {
+            try {
+                // 결제 요청
+                const paymentResult = await requestPayment(itemId, totalPrice);
+
+                console.log("결제 성공:", paymentResult);
+                alert("결제가 성공적으로 완료되었습니다!");
+
+                // 주문 서버로 전달
+                await sendOrderToServer(token, header, itemId, count);
+
+                alert("주문이 완료되었습니다.");
+                location.href = '/main';
+            } catch (error) {
+                console.error("오류 발생:", error);
+                alert(error.message || "결제 또는 주문 처리 중 문제가 발생했습니다.");
+            }
+        }
+
+        function requestPayment(itemId, totalPrice) {
+            return new Promise((resolve, reject) => {
+                AUTHNICE.requestPay({
+                    clientId: 'S2_be02baa4d0ff4618801a448872ab6e16',
+                    method: 'card',
+                    orderId: `${itemId}-${new Date().getTime()}`,
+                    amount: totalPrice,
+                    goodsName: '구매한 상품명',
+                    returnUrl: 'http://localhost:8080/payment/success',
+                    fnError: function (result) {
+                        console.error("결제 오류:", result);
+                        reject(new Error("결제 중 오류가 발생했습니다: " + result.errorMsg));
+                    },
+                    fnSuccess: function (result) {
+                        resolve(result);
+                    }
+                });
+            });
+            }
+
+            function sendOrderToServer(token, header, itemId, count) {
+                const url = "/order";
+                const paramData = { itemId, count };
+                const param = JSON.stringify(paramData);
+
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        contentType: "application/json",
+                        data: param,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        dataType: "json",
+                        cache: false,
+                        success: function (result, status) {
+                            resolve(result);
+                        },
+                        error: function (jqXHR, status, error) {
+                            if (jqXHR.status === 401) {
+                                alert('로그인 후 이용해주세요.');
+                                location.href = '/members/login';
+                            } else {
+                                console.error("주문 오류:", jqXHR, status, error);
+                                reject(new Error("주문 중 오류가 발생했습니다."));
+                            }
+                        }
+                    });
+                });
+            }
+
+            function addCart() {
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                var url = "/cart";
+                var paramData = {
+                    itemId: $("#itemId").val(),
+                    count: $("#count").val()
+                };
+
+                var param = JSON.stringify(paramData);
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: param,
+                    beforeSend: function (xhr) {
+                        // CSRF 헤더 설정
+                        xhr.setRequestHeader(header, token);
+                    },
+                    dataType: "json",
+                    cache: false,
+                    success: function (result, status) {
+                        alert("상품을 장바구니에 담았습니다.");
+                        location.href = '/';
+                    },
+                    error: function (jqXHR, status, error) {
+                        if (jqXHR.status == '401') {
+                            alert('로그인 후 이용해주세요');
+                            location.href = '/members/login';
+                        } else {
+                            alert(jqXHR.responseText);
+                        }
+                    }
+                });
+            }
+
+            // 초기화 및 이벤트 설정
+            $(document).ready(function () {
+                calculateTotalPrice();
+
+                $("#count").change(function () {
+                    calculateTotalPrice();
+                });
+
+                document.querySelector('button[onclick="order()"]').onclick = order;
+                document.querySelector('button[onclick="addCart()"]').onclick = addCart;
             });
         });
-
-        function calculateToalPrice(){
-            var count = $("#count").val();
-            var price = $("#price").val();
-            var totalPrice = price*count;
-            $("#totalPrice").html(totalPrice + '원');
-        }
-
-          function order(){
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-            console.log(" 호출됨");
-            console.log("토큰 : "+token);
-            console.log("헤더 : "+header);
-
-
-            var url = "/order";
-            var paramData = {
-                itemId : $("#itemId").val(),
-                count : $("#count").val()
-            };
-
-            var param = JSON.stringify(paramData);
-            console.log(param);
-
-            $.ajax({
-                url      : url,
-                type     : "POST",
-               contentType : "application/json",
-                data     : param,
-                beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
-                    xhr.setRequestHeader(header, token);
-                },
-                dataType : "json",
-                cache   : false,
-                success  : function(result, status){
-                    alert("주문이 완료 되었습니다.");
-                    location.href='/main';
-                },
-                error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.status);
-                        alert(status);
-                        alert(error);
-
-
-                    }
-
-                }
-            });
-        }
-          function addCart(){
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-
-            var url = "/cart";
-            var paramData = {
-                itemId : $("#itemId").val(),
-                count : $("#count").val()
-            };
-
-            var param = JSON.stringify(paramData);
-
-            $.ajax({
-                url      : url,
-                type     : "POST",
-                contentType : "application/json",
-                data     : param,
-                beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
-                    xhr.setRequestHeader(header, token);
-                },
-                dataType : "json",
-                cache   : false,
-                success  : function(result, status){
-                    alert("상품을 장바구니에 담았습니다.");
-                    location.href='/';
-                },
-                error : function(jqXHR, status, error){
-
-                    if(jqXHR.status == '401'){
-                        alert('로그인 후 이용해주세요');
-                        location.href='/members/login';
-                    } else{
-                        alert(jqXHR.responseText);
-                    }
-
-                }
-            });
-        }
     </script>
 
 </th:block>
@@ -122,27 +174,32 @@
 <!-- 사용자 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
-        .mgb-15{
-            margin-bottom:15px;
+        .mgb-15 {
+            margin-bottom: 15px;
         }
-        .mgt-30{
-            margin-top:30px;
+
+        .mgt-30 {
+            margin-top: 30px;
         }
-        .mgt-50{
-            margin-top:50px;
+
+        .mgt-50 {
+            margin-top: 50px;
         }
-        .repImgDiv{
-            margin-right:15px;
-            height:auto;
-            width:50%;
+
+        .repImgDiv {
+            margin-right: 15px;
+            height: auto;
+            width: 50%;
         }
-        .repImg{
-            width:100%;
-            height:400px;
+
+        .repImg {
+            width: 100%;
+            height: 400px;
         }
-        .wd50{
-            height:auto;
-            width:50%;
+
+        .wd50 {
+            height: auto;
+            width: 50%;
         }
     </style>
 </th:block>
@@ -154,13 +211,13 @@
         <input type="hidden" id="itemId" th:value="${item.id}">
 
         <div class="repImgDiv">
-            <img th:src="${item.itemImgDtoList[0].imgUrl}" class = "rounded repImg" th:alt="${item.itemNm}">
+            <img th:src="${item.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${item.itemNm}">
         </div>
         <div class="wd50">
             <span th:if="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">
                 판매중
             </span>
-            <span th:unless="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="badge btn-danger mgb-15" >
+            <span th:unless="${item.itemSellStatus == T(com.shop.constant.ItemSellStatus).SELL}" class="badge btn-danger mgb-15">
                 품절
             </span>
             <div class="h4" th:text="${item.itemNm}"></div>
