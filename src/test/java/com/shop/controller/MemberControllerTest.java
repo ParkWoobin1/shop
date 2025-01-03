@@ -39,6 +39,7 @@ class MemberControllerTest {
         memberFormDto.setName("박우빈2");
         memberFormDto.setName("박우빈3");
         memberFormDto.setName("박우빈4");
+        memberFormDto.setName("박우빈5");
         memberFormDto.setPassword(password);
         Member member = Member.createMember(memberFormDto,passwordEncoder);
         return memberService.saveMember(member);
