@@ -1,7 +1,7 @@
 pipeline {
     agent any
     triggers {
-            githubPush()
+            githubPush() //트리거값추가
         }
     stages {
         stage('Prepare') {
