@@ -36,6 +36,7 @@ class MemberControllerTest {
         memberFormDto.setEmail(email);
         memberFormDto.setName("박우빈");
         memberFormDto.setAddress("경기도하남시 덕풍2동");
+        memberFormDto.setName("박우빈2");
         memberFormDto.setPassword(password);
         Member member = Member.createMember(memberFormDto,passwordEncoder);
         return memberService.saveMember(member);
