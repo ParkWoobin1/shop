@@ -1,11 +1,11 @@
 pipeline {
     agent any
     stages {
-        stage('Prepare'){
+        stage('Prepare') {
             steps {
-                git credentialsId : '{github_shop}',
-                    branch : '{https://aea1-121-134-77-227.ngrok-free.app/github-webhook}',
-                    url : 'https://github.com/ParkWoobin1/shop.git'
+                git credentialsId: 'github_shop',
+                    branch: 'main', // 올바른 브랜치 이름 사용
+                    url: 'https://github.com/ParkWoobin1/shop.git' // 올바른 저장소 URL 사용
             }
         }
         stage('test') {
@@ -18,6 +18,5 @@ pipeline {
                 echo 'build stage'
             }
         }
-
     }
 }
