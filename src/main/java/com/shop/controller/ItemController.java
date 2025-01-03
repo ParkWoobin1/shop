@@ -7,7 +7,7 @@ import com.shop.entity.Item;
 import com.shop.entity.Member;
 import com.shop.service.ItemService;
 import com.shop.service.MemberService;
-import com.shop.service.NaverSearchService;
+import com.shop.service.NaverNewsCrawlerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +33,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final MemberService memberService;
-    private final NaverSearchService naverSearchService;
+    private final NaverNewsCrawlerService naverNewsCrawlerService;
 
     @GetMapping(value = "/admin/item/new")
     public String itemForm(Model model)
@@ -139,9 +139,9 @@ public class ItemController {
 
     @GetMapping("/admin/news")
     public String getGolfzonNews(Model model) {
-       // var news = naverSearchService.searchGolfzonArticles();
 
-        //model.addAttribute("news");
+
+
         return "news"; // news.html을 렌더링합니다.
     }
 

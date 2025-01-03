@@ -2,39 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<script type="text/javascript">
+<head>
 
-  
-</script>
+</head>
 
-
+<body>
 <div th:fragment="header">
     <nav class="navbar navbar-expand-sm bg-light">
-       <!-- <button type="button" data-toggle="collapse"
-                data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
-                aria-expanded="false" aria-label="Toggle navigation src=\">
-            <img src="http://office.golfzon.corp/Images/Images/Theme/X_portal_125/logo_header_28.png?vs=2023-11-27"
-                 a class="navbar-brand" href="/">
-            &lt;!&ndash;<span class="navbar-toggler-icon"></span>&ndash;&gt;
-
-        </button>-->
-        <a class="navbar-brand" href="/main" >
-            <img src="http://office.golfzon.corp/Images/Images/Theme/X_portal_125/logo_header_28.png?vs=2024-02-13" href="/"/>
+        <a class="navbar-brand" href="/main">
+            <img src="http://office.golfzon.corp/Images/Images/Theme/X_portal_125/logo_header_28.png?vs=2024-02-13" />
         </a>
-        <div>
-
-        </div>
-
-
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-           <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0">-->
             <ul class="top-right-container">
-
-                <a href="#none" onclick="openPopup()">
-
-                <!--<li class="top-right-text" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" id="real" href="/cart">장바구니</a>
-                </li>-->
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link" href="/members/login">로그인</a>
                 </li>
@@ -47,10 +26,16 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <li class="top-left-text" sec:authorize="isAuthenticated()">
-                <a class="nav-link" href="/admin/news">골프존기사</a>
+                <button onclick="openNewWindow()">골프존기사</button>
+                <script>
+                    console.log("openNewWindow 함수 window에 등록");
+                    window.openNewWindow = function () {
+                        window.open('/crawl/news', "_blank", "width=600,height=800");
+                    };
+                </script>
             </li>
         </div>
     </nav>
 </div>
-
+</body>
 </html>

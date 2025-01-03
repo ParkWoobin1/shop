@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>뉴스 크롤링 결과</title>
+</head>
+<body>
+<h1>뉴스 크롤링 결과</h1>
+<ul>
+    <li th:each="article : ${articles}">
+        <a th:href="${article.link}" th:text="${article.title}"></a>
+    </li>
+</ul>
+</body>
+</html>
