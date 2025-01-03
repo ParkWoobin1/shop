@@ -4,7 +4,7 @@ pipeline {
         stage('Prepare'){
             steps {
                 git credentialsId : '{github_shop}',
-                    branch : '{https://43b2-121-134-77-227.ngrok-free.app/gitbuh-webhook}',
+                    branch : '{https://aea1-121-134-77-227.ngrok-free.app/github-webhook}',
                     url : 'https://github.com/ParkWoobin1/shop.git'
             }
         }
