@@ -4,7 +4,7 @@ pipeline {
         stage('Prepare') {
             steps {
                 git credentialsId: 'github_shop',
-                    branch: 'main',
+                    branch: 'master',
                     url: 'https://github.com/ParkWoobin1/shop.git'
             }
         }
