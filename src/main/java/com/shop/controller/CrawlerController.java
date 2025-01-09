@@ -16,6 +16,13 @@ public class CrawlerController {
     @Autowired
     private NaverNewsCrawlerService crawlerService;
 
+    /**
+     *
+     * @param keyword
+     * @param model
+     * @return
+     */
+
     @GetMapping("/news")
     public String crawlNews(@RequestParam(required = false) String keyword, Model model) {
         if (keyword == null || keyword.isEmpty()) {

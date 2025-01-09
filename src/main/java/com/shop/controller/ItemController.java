@@ -117,6 +117,12 @@ public class ItemController {
         return "item/itemMng";
     }
 
+    /**
+     *
+     * @param model
+     * @param itemId
+     * @return 반환하는 model
+     */
     @GetMapping(value = "/item/{itemId}")
     public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
         ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
@@ -137,13 +143,7 @@ public class ItemController {
         return "item/itemReal";
     }
 
-    @GetMapping("/admin/news")
-    public String getGolfzonNews(Model model) {
 
-
-
-        return "news"; // news.html을 렌더링합니다.
-    }
 
 
 

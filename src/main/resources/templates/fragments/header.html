@@ -26,10 +26,10 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <li class="top-left-text" sec:authorize="isAuthenticated()">
-                <button onclick="openNewWindow()">골프존기사</button>
+                <button onclick="openNewWindow2()">골프존기사</button>
                 <script>
                     console.log("openNewWindow 함수 window에 등록");
-                    window.openNewWindow = function () {
+                    window.openNewWindow2 = function () {
                         window.open('/crawl/news', "_blank", "width=600,height=800");
                     };
                 </script>

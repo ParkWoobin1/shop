@@ -24,6 +24,13 @@ public class CartController {
 
     private final CartService cartService;
 
+    /**
+     *
+     * @param cartItemDto
+     * @param bindingResult
+     * @param principal
+     * @return
+     */
     @PostMapping(value = "/cart")
     public @ResponseBody
     ResponseEntity order(@RequestBody @Valid CartItemDto cartItemDto, BindingResult bindingResult, Principal principal){
@@ -56,6 +63,13 @@ public class CartController {
         return "cart/cartList";
     }
 
+    /**
+     *
+     * @param cartItemId
+     * @param count
+     * @param principal
+     * @return
+     */
     @PatchMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity updateCartItem(@PathVariable("cartItemId") Long cartItemId, int count, Principal principal){
 
@@ -70,6 +84,12 @@ public class CartController {
     }
 
 
+    /**
+     *
+     * @param cartItemId
+     * @param principal
+     * @return
+     */
     @DeleteMapping(value = "/cartItem/{cartItemId}")
     public @ResponseBody ResponseEntity deleteCartItem(@PathVariable("cartItemId") Long cartItemId, Principal principal){
 
