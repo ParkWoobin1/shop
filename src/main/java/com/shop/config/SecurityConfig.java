@@ -24,6 +24,7 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.formLogin()
+                // 잠시 /members/login 해제
                 .loginPage("/members/login")
                 .defaultSuccessUrl("/main")
                 .usernameParameter("email")
@@ -39,11 +40,15 @@ public class SecurityConfig  {
         http.authorizeRequests()
                 .mvcMatchers("/css/**", "/js/**", "/img/**").permitAll()
                 .mvcMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                .mvcMatchers("/error").permitAll() // 에러 경로 허용
                 .mvcMatchers("/admin/**").hasRole("ADMIN")
+                .mvcMatchers("/members/**").permitAll()
                 // Swagger UI 경로에 접근 허용
                 .mvcMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
         ;
+        //250114 maven build atemp but build status fail
+        //http.csrf().disable(); // CSRF 임시 비활성화
 
         http.exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())

@@ -85,6 +85,11 @@
       <label th:for="password">Password</label>
       <input type="password" name="password" id="password" class="form-control mr-sm-2" placeholder="Enter your password">
     </div>
+      <!-- 아이디 저장 체크박스 추가 -->
+      <div class="checkbox-container">
+          <input type="checkbox" id="saveId">
+          <label for="saveId">ssc ID 저장</label>
+      </div>
     <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
     <button class="btn btn-primary">LOGIN</button>
     <!--24-01-12 박우빈 회원가입 기능 삭제-->
@@ -93,5 +98,29 @@
   </form>
 
 </div>
+     <script>
+         document.addEventListener("DOMContentLoaded", function() {
+             const savedUsername = localStorage.getItem("savedUsername");
+             const emailInput = document.getElementById("email");
+             const saveIdCheckbox = document.getElementById("saveId");
+
+             // 저장된 아이디가 있으면 입력창에 자동 입력하고 체크박스 체크
+             if (savedUsername) {
+                 emailInput.value = savedUsername;
+                 saveIdCheckbox.checked = true;
+             }
+
+             document.getElementById("loginForm").addEventListener("submit", function(event) {
+                 const username = emailInput.value;
+                 const saveIdChecked = saveIdCheckbox.checked;
+
+                 if (saveIdChecked) {
+                     localStorage.setItem("savedUsername", username); // 아이디 저장
+                 } else {
+                     localStorage.removeItem("savedUsername"); // 아이디 삭제
+                 }
+             });
+         });
+     </script>
 
 </html>

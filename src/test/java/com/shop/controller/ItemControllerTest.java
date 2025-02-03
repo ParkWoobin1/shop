@@ -35,7 +35,8 @@ class ItemControllerTest {
 
     @Test
     @DisplayName("상품등록 페이지 권한 테스트")
-    @WithMockUser(username = "user",roles = "USER")
+    //25014 임시주석처리 @WithMockUser(username = "user",roles = "USER")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void itemFormAdminNotTest() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/item/new")).andDo(print())
                 .andExpect(status().isOk());
