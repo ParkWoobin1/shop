@@ -5,7 +5,7 @@ pipeline {
         JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
         DEPLOY_SERVER = "ec2-user@15.168.76.246"  // 배포할 원격 서버
-        DEPLOY_DIR = "/home/user/app"  // JARr 파일이 배포될 디렉터리
+        DEPLOY_DIR = "/home/user/app"  // JAR 파일이 배포될 디렉터리
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
                     echo " Deploying ${env.APP_NAME} to ${DEPLOY_SERVER}:${DEPLOY_DIR}"
                     sh """
                     scp ${env.APP_NAME} ${DEPLOY_SERVER}:${DEPLOY_DIR}/
-                    ssh ${DEPLOY_SERVER} "nohup java -jar ${DEPLOY_DIR}/$(basename ${env.APP_NAME}) > /dev/null 2>&1 &"
+                    ssh ${DEPLOY_SERVER} "nohup java -jar ${DEPLOY_DIR}/\$(basename ${env.APP_NAME}) > /dev/null 2>&1 &"
                     """
                 }
             }
